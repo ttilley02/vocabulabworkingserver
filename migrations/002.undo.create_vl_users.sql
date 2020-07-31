@@ -1,4 +1,4 @@
-ALTER TABLE blogful_articles
+ALTER TABLE vocabulab_notes
   DROP COLUMN IF EXISTS author_id;
 
-DROP TABLE IF EXISTS blogful_users;
+DROP TABLE IF EXISTS vocabulab_users;
