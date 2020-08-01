@@ -15,27 +15,38 @@ cardsRouter
       .catch(next)
   })
 
-// cardsRouter
-//   .route('/:card_id')
-//   // .all(requireAuth)
-//   .all(checkCardExists)
-//   .get((req, res) => {
-//     res.json(cardsService.serializecard(res.card))
-//   })
+cardsRouter
+.route('/:user_id/cards')
+.all(checkUserExists)
+.get((req, res, next) => {
+  cardsService.getAllUserCards(req.app.get('db'))
+    .then(cards => {
+      res.json(cards.map(cardsService.serializeCard))
+    })
+    .catch(next)
+})
 
-// cardsRouter.route('/:card_id/notes/')
-//   // .all(requireAuth)
-//   .all(checkCardExists)
-//   .get((req, res, next) => {
-//     cardsService.getNotesForCard(
-//       req.app.get('db'),
-//       req.params.card_id
-//     )
-//       .then(notes => {
-//         res.json(notes.map(cardsService.serializecardnote))
-//       })
-//       .catch(next)
-//   })
+cardsRouter
+  .route('/:card_id')
+  // .all(requireAuth)
+  .all(checkCardExists)
+  .get((req, res) => {
+    res.json(cardsService.serializeCard(res.card))
+  })
+
+cardsRouter.route('/:card_id/notes/')
+  // .all(requireAuth)
+  .all(checkCardExists)
+  .get((req, res, next) => {
+    cardsService.getNotesForCard(
+      req.app.get('db'),
+      req.params.card_id
+    )
+      .then(notes => {
+        res.json(notes.map(cardsService.serializeCardNote))
+      })
+      .catch(next)
+  })
 
 /* async/await syntax for promises */
 async function checkCardExists(req, res, next) {
@@ -56,5 +67,25 @@ async function checkCardExists(req, res, next) {
     next(error)
   }
 }
+
+async function checkUserExists(req, res, next) {
+  try {
+    const user = await cardsService.getAllUserCards(
+      req.app.get('db'),
+      req.params.user_id
+    )
+
+    if (!user)
+      return res.status(404).json({
+        error: `user doesn't exist`
+      })
+
+    res.user = user
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 module.exports = cardsRouter

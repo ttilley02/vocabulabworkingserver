@@ -215,6 +215,17 @@ INSERT INTO vocabulab_notes (
     'THIS IS A BIG TEST.  NOTICE ME SO I CAN HELP TEST THINGS',
     1,
     2
+  ),
+    (
+    'THIS IS A BIG TEST2.  NOTICE ME SO I CAN HELP TEST THINGS2',
+    5,
+    2
+  ),
+
+    (
+    'CHECK ME OUT.  BIG TIME OVER HERE',
+    1,
+    3
   );
   
 
