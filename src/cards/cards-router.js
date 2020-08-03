@@ -1,9 +1,11 @@
 const express = require('express')
+const path = require("path");
 const cardsService = require('./cards-service')
-// const { requireAuth } = require('../middleware/jwt-auth')
+const { requireAuth } = require('../middleware/jwt-auth')
 
 
 const cardsRouter = express.Router()
+const jsonBodyParser = express.json();
 
 cardsRouter
   .route('/')
@@ -17,9 +19,10 @@ cardsRouter
 
 cardsRouter
 .route('/:user_id/cards')
+.all(requireAuth)
 .all(checkUserExists)
 .get((req, res, next) => {
-  cardsService.getAllUserCards(req.app.get('db'))
+  cardsService.getAllUserCards(req.app.get('db'),req.params.user_id)
     .then(cards => {
       res.json(cards.map(cardsService.serializeCard))
     })
@@ -28,14 +31,39 @@ cardsRouter
 
 cardsRouter
   .route('/:card_id')
-  // .all(requireAuth)
+  .all(requireAuth)
   .all(checkCardExists)
   .get((req, res) => {
     res.json(cardsService.serializeCard(res.card))
   })
 
-cardsRouter.route('/:card_id/notes/')
-  // .all(requireAuth)
+  .post( jsonBodyParser, (req, res, next) => {
+    const { favorite, card_id } = req.body
+    const noteToUpdate = { favorite, card_id }
+    const numberOfValues = Object.values(noteToUpdate).filter(Boolean).length
+      if (numberOfValues === 0) {
+        return res.status(400).json({
+          error: {
+            message: `must mark as a favorite`
+          }
+        })
+      }
+
+      noteToUpdate.user_id = req.user.id;  
+      
+    cardsService.favCard(
+      req.app.get('db'),
+      noteToUpdate
+    )
+      .then(numRowsAffected => {
+        res.status(204).end()
+      })
+      .catch(next)
+})
+
+cardsRouter
+  .route('/:card_id/notes/')
+  .all(requireAuth)
   .all(checkCardExists)
   .get((req, res, next) => {
     cardsService.getNotesForCard(
@@ -47,6 +75,37 @@ cardsRouter.route('/:card_id/notes/')
       })
       .catch(next)
   })
+
+
+cardsRouter
+  .route('/')
+  .all(requireAuth)
+  .post( jsonBodyParser, (req, res, next) => {
+    const { spa_content, eng_content, difficulty } = req.body;
+    const newCard = { spa_content, eng_content, difficulty  };
+
+    for (const [key, value] of Object.entries(newCard))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`
+        });
+
+  newCard.user.id = req.user.id;   
+
+  cardsService.insertCard(
+    req.app.get("db"), 
+    newCard
+  )
+    .then(card => {
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${newCard.id}`))
+        .json(newCard);
+    })
+    .catch(next);
+});
+
+  
 
 /* async/await syntax for promises */
 async function checkCardExists(req, res, next) {

@@ -9,18 +9,18 @@ const jsonBodyParser = express.json();
 notesRouter
   .route("/")
   .post( jsonBodyParser, (req, res, next) => {
-    const { card_id, text } = req.body;
-    const newnote = { card_id, text };
+    const { card_id, note } = req.body;
+    const newNote = { card_id, note };
 
-    for (const [key, value] of Object.entries(newnote))
+    for (const [key, value] of Object.entries(newNote))
       if (value == null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`
         });
 
-    newnote.user_id = req.user.id;
+    newNote.user_id = 2;
 
-    notesService.insertNote(req.app.get("db"), newnote)
+    notesService.insertNote(req.app.get("db"), newNote)
       .then(note => {
         res
           .status(201)

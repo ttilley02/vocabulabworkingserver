@@ -9,9 +9,9 @@ TRUNCATE
 
 INSERT INTO vocabulab_users(user_name, full_name, nickname, password)
 VALUES
-('testperson1', 'test person1', null , 'password1'),
-('testperson2', 'test person2', null , 'password2'),
-('testperson3', 'test person3', null , 'password3');
+('testperson1', 'test person1', null , '$2a$10$stSTf3azWNucsCVJ5znzw.XIkCklcYaEXLu3DlUax.Gr5HN0/m/RO'),
+('testperson2', 'test person2', null , '$2a$10$stSTf3azWNucsCVJ5znzw.XIkCklcYaEXLu3DlUax.Gr5HN0/m/RO'),
+('testperson3', 'test person3', null , '$2a$10$stSTf3azWNucsCVJ5znzw.XIkCklcYaEXLu3DlUax.Gr5HN0/m/RO');
 
 INSERT INTO vocabulab_cards (spa_content, eng_content, difficulty)
 VALUES

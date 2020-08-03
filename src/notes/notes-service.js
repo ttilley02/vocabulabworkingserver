@@ -6,7 +6,7 @@ const notesService = {
       .from('vocabulab_notes AS note')
       .select(
         'note.note',
-        'note.cardData',
+        'note.carddata',
         'note.favorite',
         'note.known',
         'note.date_created',
@@ -50,8 +50,8 @@ const notesService = {
   serializeNote(note) {
     const { user } = note
     return {
-      note: xss(note.text),
-      cardData: note.cardData,
+      note: note.note,
+      carddata: note.carddata,
       known: note.known,
       favorite: note.favorite ,
       date_created: new Date(note.date_created),

@@ -7,7 +7,7 @@ const { NODE_ENV } = require('./config')
 const cardsRouter = require('./cards/cards-router')
 const notesRouter = require('./notes/notes-router')
 const usersRouter = require('./users/users-router')
-
+const authRouter = require('./auth/auth-router')
 
 const app = express()
 
@@ -19,8 +19,9 @@ app.use(helmet())
 
 app.use('/api/cards', cardsRouter)
 app.use('/api/notes', notesRouter)
+app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
-// app.use('/api/auth', authRouter)
+
 
 app.use(function errorHandler(error, req, res, next) {
     let response
