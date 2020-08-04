@@ -11,6 +11,7 @@ notesRouter
   .post( jsonBodyParser, (req, res, next) => {
     const { card_id, note } = req.body;
     const newNote = { card_id, note };
+    console.log(req.user.id)
 
     for (const [key, value] of Object.entries(newNote))
       if (value == null)

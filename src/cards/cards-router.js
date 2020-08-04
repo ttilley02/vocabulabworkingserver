@@ -18,11 +18,11 @@ cardsRouter
   })
 
 cardsRouter
-.route('/:user_id/cards')
+.route('/mycards')
 .all(requireAuth)
 .all(checkUserExists)
 .get((req, res, next) => {
-  cardsService.getAllUserCards(req.app.get('db'),req.params.user_id)
+  cardsService.getAllUserCards(req.app.get('db'),req.user.id)
     .then(cards => {
       res.json(cards.map(cardsService.serializeCard))
     })
