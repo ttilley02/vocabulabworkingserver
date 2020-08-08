@@ -47,6 +47,22 @@ const notesService = {
       )
   },
 
+  updateNote(db, id, newNoteFields) {
+    return db('vocabulab_notes')
+      .where({ id })
+      .update(newNoteFields);
+   },
+
+
+  deleteNote(db, id, user) {
+  return db
+  .from('vocabulab_notes AS notes')
+  .where({card_id: id, user_id: user})
+  .delete();
+},
+
+   
+
   serializeNote(note) {
     const { user } = note
     return {

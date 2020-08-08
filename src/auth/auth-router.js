@@ -20,10 +20,10 @@ authRouter
        loginUser.user_name
      )
      .then(dbUser =>{
-         console.log(dbUser.id)
-       if (!dbUser){
+       if (!dbUser || dbUser === null){
          return res.status(400).json({error: "Incorrect user_name or password"})
        }
+       
        return AuthService.comparePassword(loginUser.password, dbUser.password)
        .then(passwordsMatch => {
          if (!passwordsMatch) {

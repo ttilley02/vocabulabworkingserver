@@ -5,12 +5,15 @@
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js",
+    "start": "node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master",
     "migrate": "postgrator --config postgrator-config.js"
   },
   "keywords": [],
+  "engines": {
+    "node": "v12.14.1"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

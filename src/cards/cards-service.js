@@ -34,17 +34,14 @@ const cardsService = {
   },
 
 getAllUserCards(db, user) {
-    let idArray = []
-    idArray.push(user)
-    console.log(idArray[0])
-    return db
+     return db
       .from('vocabulab_cards AS card')
       .join(
         'vocabulab_notes AS notes',
         'card.id',
         'notes.card_id',
       )
-      .select(
+      .distinct(
         'card.id',
         'card.spa_content',
         'card.eng_content',
@@ -53,8 +50,7 @@ getAllUserCards(db, user) {
         'notes.note',
 
       )
-      .where({'notes.user_id': 1})
-      .groupBy('card.id' , 'notes.note') 
+      .where('notes.user_id', user)
   },
 
   getById(db, id) {
