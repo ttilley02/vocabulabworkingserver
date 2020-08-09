@@ -30,6 +30,7 @@ notesRouter
       .catch(next);
   })
   .patch( requireAuth, jsonBodyParser, (req, res, next) => {
+    console.log("erererererer")
     const { card_id, note } = req.body;
     const newNoteFields = { card_id, note };
       for (const [key, value] of Object.entries(newNoteFields))
@@ -40,8 +41,14 @@ notesRouter
   
     newNoteFields.user_id = req.user.id
 
-    notesService.updateNote(req.app.get("db"), req.user.id, newNoteFields)
+    notesService.updateNote(
+      req.app.get("db"), 
+      req.user.id,
+      card_id, 
+      newNoteFields
+    )
       .then(()=> {
+        console.log("router")
         res.status(204).end()
       })
       .catch(next)
@@ -50,9 +57,7 @@ notesRouter
   notesRouter
   .route('/:card_id')
   .delete(requireAuth, jsonBodyParser,(req, res, next) => {
-    console.log(req.user.id)
-    console.log(req.params.card_id)
-    notesService.deleteNote(
+     notesService.deleteNote(
            req.app.get('db'),
            req.params.card_id,
            req.user.id

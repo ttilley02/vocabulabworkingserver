@@ -47,20 +47,20 @@ const notesService = {
       )
   },
 
-  updateNote(db, id, newNoteFields) {
+  updateNote(db, user_id, card_id, newNoteFields) {
+    console.log("Service object", user_id,card_id)
     return db('vocabulab_notes')
-      .where({ id })
+      .where({user_id, card_id})
       .update(newNoteFields);
    },
 
 
-  deleteNote(db, id, user) {
-    console.log("test")
+  deleteNote(db, card_id, user_id) {
   return db
-  .from('vocabulab_notes AS notes')
-  .where(card_id = id, user_id = user)
+  .from('vocabulab_notes')
+  .where({card_id, user_id})
   .delete();
-},
+  },
 
    
 
