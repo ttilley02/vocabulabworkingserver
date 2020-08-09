@@ -1,5 +1,8 @@
 BEGIN;
 
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 TRUNCATE
   vocabulab_notes,
   vocabulab_cards,
@@ -204,6 +207,7 @@ VALUES
 ('Más o menos me acuesto a las diez de la noche, después del noticiero.','I go to bed around ten at night, after the news.','i'),
 ('No llegues tarde','Don''t get home late.','i'),
 ('No me gusta dormir en la tarde, por eso nunca tomo siesta.','I don''t like to sleep in the afternoon, that''s why I don''t take a nap.','i');
+
 
 
 INSERT INTO vocabulab_notes (
