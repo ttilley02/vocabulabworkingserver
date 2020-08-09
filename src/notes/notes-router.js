@@ -50,6 +50,8 @@ notesRouter
   notesRouter
   .route('/:card_id')
   .delete(requireAuth, jsonBodyParser,(req, res, next) => {
+    console.log(req.user.id)
+    console.log(req.params.card_id)
     notesService.deleteNote(
            req.app.get('db'),
            req.params.card_id,

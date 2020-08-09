@@ -55,7 +55,11 @@ const notesService = {
 
 
   deleteNote(db, id, user) {
-    db.raw(`delete from vocabulab_notes where card_id = 1 and user_id = 3` )
+    console.log("test")
+  return db
+  .from('vocabulab_notes AS notes')
+  .where(card_id = id, user_id = user)
+  .delete();
 },
 
    

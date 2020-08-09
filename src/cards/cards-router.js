@@ -25,7 +25,6 @@ cardsRouter
   
   cardsService.getAllUserCards(req.app.get('db'), req.user.id)
     .then(cards => {
-      console.log("these are it")
       res.json(cards.map(cardsService.serializeCard))
     })
     .catch(next)
