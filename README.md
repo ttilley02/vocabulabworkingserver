@@ -10,7 +10,7 @@ for future languages and study card archetypes
 ### card additions made periodcally to the database.
 
 
-##### npm start 
+### npm start 
 To run on port: 8080
 
 Also hosted via Heroku:
