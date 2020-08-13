@@ -4,8 +4,9 @@ Powered by the University of Texas Austin.
 The database holds spanish to english translations of grammer, vocab and phrases from the curriculum and provides is built around scalability
 for future languages and study card archetypes
 
-### card additions made periodcally to the database.
+
 ## Current card count #189
+## card additions made periodcally to the database.
 
 ### card additions made periodcally to the database.
 
