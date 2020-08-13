@@ -1,6 +1,5 @@
 const AuthService = require("./Auth-service");
 
-
 function requireAuth(req, res, next) {
   const authToken = req.get("Authorization") || "";
   let basicToken;
@@ -20,19 +19,20 @@ function requireAuth(req, res, next) {
   }
 
   AuthService.getUserWithUserName(req.app.get("db"), tokenUserName)
-    .then(user => {
+    .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Unauthorized request" });
       }
-      return AuthService.comparePasswords(tokenPassword, user.password)
-        .then(passwordsMatch => {
+      return AuthService.comparePasswords(tokenPassword, user.password).then(
+        (passwordsMatch) => {
           if (!passwordsMatch) {
-            return res.status(401).json({ error: 'Unauthorized request' })
+            return res.status(401).json({ error: "Unauthorized request" });
           }
 
-          req.user = user
-          next()
-      })
+          req.user = user;
+          next();
+        }
+      );
     })
     .catch(next);
 }

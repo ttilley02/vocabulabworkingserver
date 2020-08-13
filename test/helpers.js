@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 function makeUsersArray() {
   return [
@@ -38,9 +38,8 @@ function makeUsersArray() {
   ];
 }
 
-
 function cleanTables(db) {
-  return db.transaction(trx =>
+  return db.transaction((trx) =>
     trx
       .raw(
         `TRUNCATE
@@ -68,25 +67,23 @@ function cleanTables(db) {
   );
 }
 
-
 function seedUsers(db, users) {
- 
-  const preppedUsers = users.map(user => ({
+  const preppedUsers = users.map((user) => ({
     ...user,
     password: bcrypt.hashSync(user.password, 1)
-  }))
-  return db.into('vocabulab_users').insert(preppedUsers)
+  }));
+  return db
+    .into("vocabulab_users")
+    .insert(preppedUsers)
     .then(() =>
       // update the auto sequence to stay in sync
-      db.raw(
-        `SELECT setval('vocabulab_users_id_seq', ?)`,
-        [users[users.length - 1].id],
-      )
-    )
+      db.raw(`SELECT setval('vocabulab_users_id_seq', ?)`, [
+        users[users.length - 1].id
+      ])
+    );
 }
 
-
-  module.exports = {
+module.exports = {
   makeUsersArray,
   cleanTables,
   seedUsers

@@ -1,68 +1,49 @@
-const xss = require('xss')
-
+const xss = require("xss");
 
 const cardsService = {
- 
   getAllCards(db) {
-    
     let cardArray = [];
-    for(i=0;i < 3; i++){
-      cardArray.push(Math.floor((Math.random() * 189) + 1));
+    for (i = 0; i < 3; i++) {
+      cardArray.push(Math.floor(Math.random() * 189 + 1));
     }
     return db
-      .from('vocabulab_cards AS card')
+      .from("vocabulab_cards AS card")
       .select(
-        'card.id',
-        'card.spa_content',
-        'card.eng_content',
-        'card.date_created',
-        'card.difficulty',
-  
+        "card.id",
+        "card.spa_content",
+        "card.eng_content",
+        "card.date_created",
+        "card.difficulty"
       )
-      // .whereIn('card.id', cardArray)
-      // .leftJoin(
-      //   'vocabulab_notes AS notes',
-      //   'card.id',
-      //   'notes.card_id',
-      // )
-      .groupBy('card.id')
-      
-      
+
+      .groupBy("card.id");
   },
 
-getAllUserCards(db, user) {
-     return db
-      .from('vocabulab_cards AS card')
-      .join(
-        'vocabulab_notes AS notes',
-        'card.id',
-        'notes.card_id',
-      )
+  getAllUserCards(db, user) {
+    return db
+      .from("vocabulab_cards AS card")
+      .join("vocabulab_notes AS notes", "card.id", "notes.card_id")
       .distinct(
-        'card.id',
-        'card.spa_content',
-        'card.eng_content',
-        'card.date_created',
-        'card.difficulty',
-        'notes.note',
-
+        "card.id",
+        "card.spa_content",
+        "card.eng_content",
+        "card.date_created",
+        "card.difficulty",
+        "notes.note"
       )
-      .where('notes.user_id', user)
+      .where("notes.user_id", user);
   },
 
   getById(db, id) {
-    return cardsService.getAllCards(db)
-      .where('card.id', id)
-      .first()
+    return cardsService.getAllCards(db).where("card.id", id).first();
   },
 
   getNotesForCard(db, card_id) {
     return db
-      .from('vocabulab_notes AS note')
+      .from("vocabulab_notes AS note")
       .select(
-
-        'note.note',
-        'note.date_created',
+        "note.note",
+        "note.date_created",
         db.raw(
           `json_strip_nulls(
             row_to_json(
@@ -79,22 +60,16 @@ getAllUserCards(db, user) {
           ) AS "user"`
         )
       )
-      .where('note.card_id', card_id)
-      .leftJoin(
-        'vocabulab_users AS usr',
-        'note.user_id',
-        'usr.id',
-      )
+      .where("note.card_id", card_id)
+      .leftJoin("vocabulab_users AS usr", "note.user_id", "usr.id");
   },
 
-
-    getNotesForCard(db, card_id) {
+  getNotesForCard(db, card_id) {
     return db
-      .from('vocabulab_notes AS note')
+      .from("vocabulab_notes AS note")
       .select(
-
-        'note.note',
-        'note.date_created',
+        "note.note",
+        "note.date_created",
         db.raw(
           `json_strip_nulls(
             row_to_json(
@@ -111,37 +86,26 @@ getAllUserCards(db, user) {
           ) AS "user"`
         )
       )
-      .where('note.card_id', card_id)
-      .leftJoin(
-        'vocabulab_users AS usr',
-        'note.user_id',
-        'usr.id',
-      )
+      .where("note.card_id", card_id)
+      .leftJoin("vocabulab_users AS usr", "note.user_id", "usr.id");
   },
 
   favCard(db, newNoteFields) {
     return db
-    .insert(newNoteFields)
-    .into('vocabulab_notes')
-    .returning('*')
-    .then(([note]) => note)
-    .then(note =>
-      cardsService.getById(db, newNoteFields.card_id)
-    )
-},
-
-
-
+      .insert(newNoteFields)
+      .into("vocabulab_notes")
+      .returning("*")
+      .then(([note]) => note)
+      .then((note) => cardsService.getById(db, newNoteFields.card_id));
+  },
 
   insertCard(db, newCard) {
     return db
       .insert(newCard)
-      .into('vocabulab_notes')
-      .returning('*')
+      .into("vocabulab_notes")
+      .returning("*")
       .then(([card]) => card)
-      .then(card =>
-        cardsService.getById(db, card.id)
-      )
+      .then((card) => cardsService.getById(db, card.id));
   },
 
   serializeCard(card) {
@@ -153,13 +117,12 @@ getAllUserCards(db, user) {
       difficulty: card.difficulty,
       number_of_notes: Number(card.number_of_noteents) || 0,
       note: card.note
-    }
+    };
   },
 
   serializeCardNote(note) {
-    const { user } = note
+    const { user } = note;
     return {
-     
       card_id: note.card_id,
       note: xss(note.note),
       date_created: new Date(note.date_created),
@@ -170,9 +133,9 @@ getAllUserCards(db, user) {
         nickname: user.nickname,
         date_created: new Date(user.date_created),
         date_modified: new Date(user.date_modified) || null
-      },
-    }
-  },
-}
+      }
+    };
+  }
+};
 
-module.exports = cardsService
+module.exports = cardsService;
