@@ -4,6 +4,7 @@ const xss = require('xss')
 const cardsService = {
  
   getAllCards(db) {
+    
     let cardArray = [];
     for(i=0;i < 3; i++){
       cardArray.push(Math.floor((Math.random() * 189) + 1));
@@ -16,20 +17,16 @@ const cardsService = {
         'card.eng_content',
         'card.date_created',
         'card.difficulty',
-        db.raw(
-           `count(DISTINCT notes) AS number_of_notes`
-        ),
-
+  
       )
-      .whereIn('card.id', cardArray)
-      .leftJoin(
-        'vocabulab_notes AS notes',
-        'card.id',
-        'notes.card_id',
-      )
-
+      // .whereIn('card.id', cardArray)
+      // .leftJoin(
+      //   'vocabulab_notes AS notes',
+      //   'card.id',
+      //   'notes.card_id',
+      // )
       .groupBy('card.id')
-      .limit(12)
+      
       
   },
 

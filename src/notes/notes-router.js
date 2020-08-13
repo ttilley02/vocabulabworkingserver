@@ -8,29 +8,7 @@ const jsonBodyParser = express.json();
 
 notesRouter
   .route("/")
-  .post( requireAuth, jsonBodyParser, (req, res, next) => {
-    const { card_id, note } = req.body;
-    const newNote = { card_id, note };
-
-      for (const [key, value] of Object.entries(newNote))
-      if (value == null)
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`
-        });
-
-    newNote.user_id = req.user.id
-
-    notesService.insertNote(req.app.get("db"), newNote)
-      .then(note => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${note.id}`))
-          .json(notesService.serializeNote(note));
-      })
-      .catch(next);
-  })
   .patch( requireAuth, jsonBodyParser, (req, res, next) => {
-    console.log("erererererer")
     const { card_id, note } = req.body;
     const newNoteFields = { card_id, note };
       for (const [key, value] of Object.entries(newNoteFields))
@@ -48,8 +26,9 @@ notesRouter
       newNoteFields
     )
       .then(()=> {
-        console.log("router")
-        res.status(204).end()
+        return res.status(204).json({
+          message: "posted!"
+        })
       })
       .catch(next)
   });
@@ -63,8 +42,10 @@ notesRouter
            req.user.id
          )
            .then(() => {
-             res.status(204).end()
+             res.status(204).json({
+              message: "deleted!"
            })
+          })
            .catch(next)
     })
 

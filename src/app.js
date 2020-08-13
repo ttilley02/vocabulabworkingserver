@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -12,10 +12,12 @@ const authRouter = require('./auth/auth-router')
 const app = express()
 
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
-  skip: () => NODE_ENV === 'test',
-}))
-app.use(cors())
-app.use(helmet())
+    skip: () => NODE_ENV === 'test',
+  }))
+  app.use(cors())
+  app.use(helmet())
+  
+app.use(express.json());
 
 app.use('/api/cards', cardsRouter)
 app.use('/api/notes', notesRouter)

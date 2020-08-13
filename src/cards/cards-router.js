@@ -2,7 +2,7 @@ const express = require('express')
 const path = require("path");
 const cardsService = require('./cards-service')
 const { requireAuth } = require('../middleware/jwt-auth')
-const authStuff = require('../middleware/Auth-service');
+
 
 
 const cardsRouter = express.Router()
@@ -13,7 +13,7 @@ cardsRouter
   .get((req, res, next) => {
     cardsService.getAllCards(req.app.get('db'))
       .then(cards => {
-        res.json(cards.map(cardsService.serializeCard))
+        res.json(cards)
       })
       .catch(next)
   })
@@ -25,7 +25,7 @@ cardsRouter
   
   cardsService.getAllUserCards(req.app.get('db'), req.user.id)
     .then(cards => {
-      res.json(cards.map(cardsService.serializeCard))
+      res.json(cards)
     })
     .catch(next)
 })
@@ -52,68 +52,21 @@ cardsRouter
     req.user.id,
     card_id
   )
-    .then(numRowsAffected => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(next)
 })
 
 
-cardsRouter
-  .route('/:card_id')
-  .all(requireAuth)
-  .all(checkCardExists)
-  .get((req, res) => {
-    res.json(cardsService.serializeCard(res.card))
-  })
-
-
-
-cardsRouter
-  .route('/:card_id/notes/')
-  .all(requireAuth)
-  .all(checkCardExists)
-  .get((req, res, next) => {
-    cardsService.getNotesForCard(
-      req.app.get('db'),
-      req.params.card_id
-    )
-      .then(notes => {
-        res.json(notes.map(cardsService.serializeCardNote))
-      })
-      .catch(next)
-  })
-
-
-cardsRouter
-  .route('/')
-  .all(requireAuth)
-  .post( jsonBodyParser, (req, res, next) => {
-    const { spa_content, eng_content, difficulty } = req.body;
-    const newCard = { spa_content, eng_content, difficulty  };
-
-    for (const [key, value] of Object.entries(newCard))
-      if (value == null)
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`
-        });
-
-  newCard.user.id = req.user.id;   
-
-  cardsService.insertCard(
-    req.app.get("db"), 
-    newCard
-  )
-    .then(card => {
-      res
-        .status(201)
-        .location(path.posix.join(req.originalUrl, `/${newCard.id}`))
-        .json(newCard);
-    })
-    .catch(next);
-});
-
-  
+// cardsRouter
+//   .route('/:card_id')
+//   .all(requireAuth)
+//   .all(checkCardExists)
+//   .get((req, res) => {
+//     res.json(res.card)
+//   })
+ 
 
 /* async/await syntax for promises */
 async function checkCardExists(req, res, next) {
