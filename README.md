@@ -5,10 +5,10 @@ The database holds spanish to english translations of grammer, vocab and phrases
 for future languages and study card archetypes
 
 
-## Current card count #189
-## card additions made periodcally to the database.
 
-### card additions made periodcally to the database.
+## Card additions made periodcally to the database. Current card count #189
+
+
 
 
 ### npm start 
