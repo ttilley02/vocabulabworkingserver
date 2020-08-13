@@ -34,3 +34,9 @@ general patch and delete for cards
 ### api/users
 User backend with JWT Auth
 Test Users available
+
+
+## Technologies used
+Node.JS , express
+PostgresSQL
+Mocha,Chai,Supertest
