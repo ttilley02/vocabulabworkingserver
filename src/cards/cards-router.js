@@ -6,6 +6,8 @@ const { requireAuth } = require("../middleware/jwt-auth");
 const cardsRouter = express.Router();
 const jsonBodyParser = express.json();
 
+
+//get all cards no login required
 cardsRouter.route("/").get((req, res, next) => {
   cardsService
     .getAllCards(req.app.get("db"))
@@ -15,6 +17,7 @@ cardsRouter.route("/").get((req, res, next) => {
     .catch(next);
 });
 
+//get all cards the user has favorited
 cardsRouter
   .route("/mycards")
   .all(requireAuth)
@@ -27,6 +30,8 @@ cardsRouter
       .catch(next);
   });
 
+
+//favorite the current card and put in the my cards section
 cardsRouter
   .route("/fav/:card_id")
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
@@ -51,32 +56,6 @@ cardsRouter
       .catch(next);
   });
 
-// cardsRouter
-//   .route('/:card_id')
-//   .all(requireAuth)
-//   .all(checkCardExists)
-//   .get((req, res) => {
-//     res.json(res.card)
-//   })
 
-/* async/await syntax for promises */
-async function checkCardExists(req, res, next) {
-  try {
-    const card = await cardsService.getById(
-      req.app.get("db"),
-      req.params.card_id
-    );
-
-    if (!card)
-      return res.status(404).json({
-        error: `card doesn't exist`
-      });
-
-    res.card = card;
-    next();
-  } catch (error) {
-    next(error);
-  }
-}
 
 module.exports = cardsRouter;

@@ -6,6 +6,9 @@ const { requireAuth } = require("../middleware/jwt-auth");
 const notesRouter = express.Router();
 const jsonBodyParser = express.json();
 
+
+
+//update a note for card that is favorited.  You can only add notes to cards you have saved as a favorite
 notesRouter.route("/").patch(requireAuth, jsonBodyParser, (req, res, next) => {
   const { card_id, note } = req.body;
   const newNoteFields = { card_id, note };
@@ -17,6 +20,7 @@ notesRouter.route("/").patch(requireAuth, jsonBodyParser, (req, res, next) => {
 
   newNoteFields.user_id = req.user.id;
 
+  //updates note table
   notesService
     .updateNote(req.app.get("db"), req.user.id, card_id, newNoteFields)
     .then(() => {
@@ -27,6 +31,7 @@ notesRouter.route("/").patch(requireAuth, jsonBodyParser, (req, res, next) => {
     .catch(next);
 });
 
+//deletes notes for user table and then deletes the corresponding card reference for the user only(many to many)
 notesRouter
   .route("/:card_id")
   .delete(requireAuth, jsonBodyParser, (req, res, next) => {
