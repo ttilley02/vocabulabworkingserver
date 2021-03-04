@@ -4,6 +4,7 @@
   "description": "Starter code for learning about authentication.",
   "private": true,
   "main": "src/server.js",
+  "master": "src/server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
