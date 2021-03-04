@@ -1,7 +1,9 @@
 {
   "name": "express-boilerplate",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Starter code for learning about authentication.",
+  "private": true,
+  "main": "src/server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
@@ -13,7 +15,6 @@
     "postdeploy": "npm run migrate:production",
     "predeploy": "npm audit && npm run migrate:production"
   },
-  "keywords": [],
   "engines": {
     "node": "14.15.2",
     "npm": "6.14.9"
@@ -47,14 +48,5 @@
   },
   "directories": {
     "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ttilley02/server-boilerplate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ttilley02/server-boilerplate/issues"
-  },
-  "homepage": "https://github.com/ttilley02/server-boilerplate#readme",
-  "description": ""
+  }
 }
